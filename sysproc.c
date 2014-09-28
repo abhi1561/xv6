@@ -89,3 +89,13 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int sys_getproc(void)
+{
+        int sadd;
+
+        if(argint(0, &sadd) < 0)
+                return -1;
+        return(getproc(sadd));
+}
+
