@@ -99,3 +99,43 @@ int sys_getproc(void)
         return(getproc(sadd));
 }
 
+int
+strcmp(const char *p, const char *q)
+{
+        while(*p && *p == *q)
+        p++, q++;
+        return (uchar)*p - (uchar)*q;
+}
+
+int mygetproc(int sadd)
+{
+        int i,no,num;
+        struct procentry
+        {
+                int id;
+                char state[10];
+                char name[16];
+        } *p;
+        p= (struct procentry*)sadd;
+        no=getproc(sadd);
+        num=no;
+        for (i=0;i<no;i++)
+        {
+                if (!strcmp(p->name,"badproc"))
+                {
+                        *p=*(p+(no-1));
+                        num--;
+                }
+        p++;
+        }
+        return num;
+}
+
+int sys_mygetproc(void)
+{
+	int sadd;
+
+        if(argint(0, &sadd) < 0)
+                return -1;
+        return(mygetproc(sadd));
+}
