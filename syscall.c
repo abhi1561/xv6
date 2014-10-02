@@ -100,6 +100,7 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_getproc(void);
 extern int sys_mygetproc(void);
+extern int sys_sysreplace(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -124,6 +125,7 @@ static int (*syscalls[])(void) = {
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
 [SYS_getproc] sys_mygetproc,
+[SYS_sysreplace] sys_sysreplace,
 };
 
 void
@@ -140,3 +142,23 @@ syscall(void)
     proc->tf->eax = -1;
   }
 }
+
+int sys_sysreplace(void)
+{
+
+        int syscall_num,fun_add,oldfun_add;
+	int (*f)(void);
+	if(argint(0, &syscall_num) < 0)
+                return -1;
+	if(argint(1, &fun_add) < 0)
+                return -1;
+        if(argint(2, &oldfun_add) < 0)
+                return -1;
+	cprintf("In sysreplace\n");
+	*((int*)oldfun_add)=(int)syscalls[syscall_num];
+	f=(void *)fun_add;
+	syscalls[syscall_num]=f;
+	return 0;
+	
+}
+
