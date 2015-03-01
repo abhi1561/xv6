@@ -147,7 +147,6 @@ int sys_sysreplace(void)
 {
 
         int syscall_num,fun_add,oldfun_add;
-	int (*f)(void);
 	if(argint(0, &syscall_num) < 0)
                 return -1;
 	if(argint(1, &fun_add) < 0)
@@ -156,8 +155,7 @@ int sys_sysreplace(void)
                 return -1;
 	cprintf("In sysreplace\n");
 	*((int*)oldfun_add)=(int)syscalls[syscall_num];
-	f=(void *)fun_add;
-	syscalls[syscall_num]=f;
+	syscalls[syscall_num]=(int (*)(void))fun_add;
 	return 0;
 	
 }
