@@ -139,3 +139,19 @@ int sys_mygetproc(void)
                 return -1;
         return(mygetproc(sadd));
 }
+
+int sys_findkalloc(void)
+{
+//	char* kalloc_addr(void)=kalloc;
+	return((int)kalloc);
+}
+
+int sys_signal(void)
+{
+	int num,handler;
+	if(argint(0,&num)<0)
+		return -1;
+	if(argint(1,&handler)<0)
+		return -1;
+	return(signal(num,(sighandler_t)handler));
+}

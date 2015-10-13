@@ -86,12 +86,25 @@ trap(struct trapframe *tf)
               tf->trapno, cpu->id, tf->eip, rcr2());
       panic("trap");
     }
+    
+    if(tf->trapno==14 && proc->sighandle[0]!=(sighandler_t)-1)
+    {
+//	cprintf("\nInside segmentation fault, proc needs to call sighandler :0x%x wrapper:0x%x and eip value: 0x%x\n",proc->sighandle[1],proc->sighandle[0],tf->eip);
+//	cprintf("\nFaulting instruction is: 0x%x",tf->eip); 
+	tf->esp=tf->esp-4;
+	*((int*)tf->esp)=(uint)proc->sighandle[1];
+	tf->esp=tf->esp-4;
+	*((int*)tf->esp)=(uint)tf->eip;
+	tf->eip=(uint)proc->sighandle[0];
+    }
+    else{
     // In user space, assume process misbehaved.
     cprintf("pid %d %s: trap %d err %d on cpu %d "
             "eip 0x%x addr 0x%x--kill proc\n",
             proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip, 
             rcr2());
     proc->killed = 1;
+    }
   }
 
   // Force process exit if it has been killed and is in user space.

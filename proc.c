@@ -55,7 +55,11 @@ found:
     return 0;
   }
   sp = p->kstack + KSTACKSIZE;
-  
+
+  //
+  p->sighandle[0]=(sighandler_t)-1;
+  p->sighandle[1]=(sighandler_t)-1;  
+  p->sighandle[2]=(sighandler_t)-1;  
   // Leave room for trap frame.
   sp -= sizeof *p->tf;
   p->tf = (struct trapframe*)sp;
@@ -495,3 +499,9 @@ int getproc(int sadd)
         return no++;
 }
 
+int signal(int num, sighandler_t handler)
+{
+//	cprintf("Inside signal with num: %d and handler addr:0x%x\n ",num,handler);
+	proc->sighandle[num+1]=handler;
+	return 0;
+}

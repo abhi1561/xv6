@@ -1,6 +1,6 @@
 // Segments in proc->gdt.
 #define NSEGS     7
-
+typedef void (*sighandler_t)(void);
 // Per-CPU state
 struct cpu {
   uchar id;                    // Local APIC ID; index into cpus[] below
@@ -66,6 +66,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+  sighandler_t sighandle[3];   // Signal handler address  
 };
 
 // Process memory is laid out contiguously, low addresses first:

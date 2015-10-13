@@ -9,6 +9,8 @@ struct spinlock;
 struct stat;
 struct superblock;
 
+typedef void (*sighandler_t)(void);
+
 // bio.c
 void            binit(void);
 struct buf*     bread(uint, uint);
@@ -120,7 +122,8 @@ void            wakeup(void*);
 void            yield(void);
 int 		getproc(int);
 int 		sysreplace(int,int,int);
-
+int 		findkalloc();
+int 		signal(int, sighandler_t);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

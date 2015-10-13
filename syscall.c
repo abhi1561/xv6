@@ -99,8 +99,10 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_getproc(void);
-extern int sys_mygetproc(void);
+//extern int sys_mygetproc(void);
 extern int sys_sysreplace(void);
+extern int sys_findkalloc(void);
+extern int sys_signal(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -124,8 +126,10 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_getproc] sys_mygetproc,
+[SYS_getproc] sys_getproc,
 [SYS_sysreplace] sys_sysreplace,
+[SYS_findkalloc] sys_findkalloc,
+[SYS_signal] sys_signal,
 };
 
 void

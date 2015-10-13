@@ -176,6 +176,9 @@ UPROGS=\
 	_badproc\
 	_myuptime\
 	_uptime\
+	_nother\
+	_test_sigsegv\
+	_wrapper\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
