@@ -6,12 +6,14 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "ptable.h"
 
+/*
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
 } ptable;
-
+*/
 static struct proc *initproc;
 
 int nextpid = 1;
@@ -60,6 +62,8 @@ found:
   p->sighandle[0]=(sighandler_t)-1;
   p->sighandle[1]=(sighandler_t)-1;  
   p->sighandle[2]=(sighandler_t)-1;  
+  p->ticks=-1;
+  p->flag=0;
   // Leave room for trap frame.
   sp -= sizeof *p->tf;
   p->tf = (struct trapframe*)sp;
@@ -504,4 +508,10 @@ int signal(int num, sighandler_t handler)
 //	cprintf("Inside signal with num: %d and handler addr:0x%x\n ",num,handler);
 	proc->sighandle[num+1]=handler;
 	return 0;
+}
+
+int alarm(int val)
+{
+	proc->ticks=val;
+	return val;
 }

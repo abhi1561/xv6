@@ -124,6 +124,7 @@ int 		getproc(int);
 int 		sysreplace(int,int,int);
 int 		findkalloc();
 int 		signal(int, sighandler_t);
+int 		alarm(int);
 // swtch.S
 void            swtch(struct context**, struct context*);
 

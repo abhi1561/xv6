@@ -155,3 +155,11 @@ int sys_signal(void)
 		return -1;
 	return(signal(num,(sighandler_t)handler));
 }
+
+int sys_alarm(void)
+{
+	int val;
+	if(argint(0,&val)<0)
+		return -1;
+	return(alarm(val));
+}

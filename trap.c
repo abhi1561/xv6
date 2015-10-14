@@ -7,12 +7,14 @@
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
+#include "ptable.h"
 
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
 extern uint vectors[];  // in vectors.S: array of 256 entry pointers
 struct spinlock tickslock;
 uint ticks;
+struct proc *p;
 
 void
 tvinit(void)
@@ -54,6 +56,28 @@ trap(struct trapframe *tf)
       wakeup(&ticks);
       release(&tickslock);
     }
+    acquire(&ptable.lock);
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+    {
+    	if(p->sighandle[2] != ((sighandler_t)-1) && p->ticks)
+	{
+		p->ticks--;
+		if(p->ticks==0)
+			p->flag=1;
+	}
+    }
+    release(&ptable.lock);
+    if( (tf->cs&3)==3 && proc->flag && proc->sighandle[2]!=(sighandler_t)-1)
+    {
+	tf->esp-=4;
+        *((int*)tf->esp)=(uint)proc->sighandle[2];
+	tf->esp-=4;
+        *((int*)tf->esp)=(uint)tf->eip;
+      	tf->eip=(uint)proc->sighandle[0];
+	proc->flag=0;
+        
+    }
+
     lapiceoi();
     break;
   case T_IRQ0 + IRQ_IDE:

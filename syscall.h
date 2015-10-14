@@ -24,3 +24,4 @@
 #define SYS_sysreplace 23
 #define SYS_findkalloc 24
 #define SYS_signal 25
+#define SYS_alarm 26
