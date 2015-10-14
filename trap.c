@@ -116,6 +116,10 @@ trap(struct trapframe *tf)
 //	cprintf("\nInside segmentation fault, proc needs to call sighandler :0x%x wrapper:0x%x and eip value: 0x%x\n",proc->sighandle[1],proc->sighandle[0],tf->eip);
 //	cprintf("\nFaulting instruction is: 0x%x",tf->eip); 
 	tf->esp=tf->esp-4;
+	*((int*)tf->esp)=(uint)tf->err;
+	tf->esp=tf->esp-4;
+	*((int*)tf->esp)=(uint)rcr2();
+	tf->esp=tf->esp-4;
 	*((int*)tf->esp)=(uint)proc->sighandle[1];
 	tf->esp=tf->esp-4;
 	*((int*)tf->esp)=(uint)tf->eip;

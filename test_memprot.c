@@ -1,0 +1,29 @@
+#include"types.h"
+#include"user.h"
+#include"wrapper.c"
+#define PROT_NONE 1
+#define PROT_READONLY 2
+#define PROT_WR 0
+
+int sig_handler(int,int);
+int main()
+{
+	if(!signal(-1,(sighandler_t)sig_wrapper))
+		printf(1,"Signal wrapper system call worked\n");
+	if(!signal(0,(sighandler_t)sig_handler))
+		printf(1,"Signal system call worked\n");
+	int *addr=(int*)malloc(4096);
+	if(mprot((void*)addr,4096,PROT_READONLY));
+		printf(1,"MAIN: Mprot registered making memory section 0x%x READONLY\n",(uint)addr);
+	*addr=10;
+	printf(1,"MAIN: Successfully written 0x%x on the readonly address\n",*addr);
+	exit();	
+}
+
+int sig_handler(int addr,int errno)
+{
+	printf(1,"SIGSEGV Handler: Addr received is 0x%x and errno is %d which is an attempt to write on READONLY memory\n",addr,errno);
+	mprot((void*)addr,4096,PROT_WR);
+	printf(1,"SIGSEGV Handler: Successfully made the memory READWRITE\n");
+	return 0;
+}

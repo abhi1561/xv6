@@ -11,10 +11,10 @@ void sig_wrapper(int f_ptr,int addr, int errno)
 //	printf(1,"\nValue of eip before f is: 0x%x and function is: 0x%x which printed directly gives: 0x%x\n",*(((int*)&f_ptr)-1),*((int*)&f_ptr),(uint)f_ptr);
 	f(addr,errno);
 //	printf(1,"\nValue of eip after f is: 0x%x\n",*(((int*)&f_ptr)-1));
-	*(((int*)&f_ptr)+2)=*(((int*)&f_ptr)-1);
-	*(((int*)&f_ptr)+1)=*(((int*)&f_ptr)-2);
+	*((int*)&f_ptr)=*(((int*)&f_ptr)-1);
+	*(((int*)&f_ptr)-1)=*(((int*)&f_ptr)-2);
 	asm("pop %edx");
 	asm("pop %ecx");
 	asm("pop %eax");
-	asm("addl $12,%ebp");
+	asm("addl $4,%ebp");
 }

@@ -180,6 +180,7 @@ UPROGS=\
 	_test_sigsegv\
 	_wrapper\
 	_test_sigalrm\
+	_test_memprot\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

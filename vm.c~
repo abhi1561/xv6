@@ -379,24 +379,24 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
 
 int mprot(void* va, int size, int prot)
 {
-//	cprintf("Vaddr is 0x%x len is %d and prot is %d\n",(int)va,size,prot); 
+	cprintf("Vaddr is 0x%x len is %d and prot is %d\n",(int)va,size,prot); 
 	char *a, *last;
   	pte_t *pte;
 	
   	a = (char*)PGROUNDDOWN((uint)va);
   	last = (char*)PGROUNDDOWN(((uint)va) + size - 1);
-//	cprintf("Before for loop a is 0x%x and last is 0x%x\n",(uint)a,(uint)last);  	
+	cprintf("Before for loop a is 0x%x and last is 0x%x\n",(uint)a,(uint)last);  	
 	for(;;){
     		if((pte = walkpgdir(proc->pgdir, a, 0)) == 0)
       		return -1;
-//		cprintf("Returned from walkpgdir");
-//    		cprintf(" PTE is : 0x%x\n",*pte);
+		cprintf("Returned from walkpgdir");
+    		cprintf(" PTE is : 0x%x\n",*pte);
 		if(prot)
 			*pte=(*pte)&(~prot);
 		else
 			*pte=(*pte)|(3);    	
 		
-//		cprintf(" PTE is : 0x%x\n",*pte);
+		cprintf(" PTE is : 0x%x\n",*pte);
 		if(a == last)
       			break;
     		a += PGSIZE;

@@ -25,4 +25,3 @@
 #define SYS_findkalloc 24
 #define SYS_signal 25
 #define SYS_alarm 26
-#define SYS_mprot 27

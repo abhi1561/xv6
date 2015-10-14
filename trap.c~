@@ -67,7 +67,17 @@ trap(struct trapframe *tf)
 	}
     }
     release(&ptable.lock);
-    
+    if( (tf->cs&3)==3 && proc->flag && proc->sighandle[2]!=(sighandler_t)-1)
+    {
+	tf->esp-=4;
+        *((int*)tf->esp)=(uint)proc->sighandle[2];
+	tf->esp-=4;
+        *((int*)tf->esp)=(uint)tf->eip;
+      	tf->eip=(uint)proc->sighandle[0];
+	proc->flag=0;
+        
+    }
+
     lapiceoi();
     break;
   case T_IRQ0 + IRQ_IDE:
