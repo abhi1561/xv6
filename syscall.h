@@ -26,3 +26,4 @@
 #define SYS_signal 25
 #define SYS_alarm 26
 #define SYS_mprot 27
+#define SYS_dsbrk 28

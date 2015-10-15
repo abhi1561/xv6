@@ -181,6 +181,7 @@ UPROGS=\
 	_wrapper\
 	_test_sigalrm\
 	_test_memprot\
+	_test_dsbrk\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)

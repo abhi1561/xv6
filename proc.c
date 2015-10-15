@@ -64,6 +64,7 @@ found:
   p->sighandle[2]=(sighandler_t)-1;  
   p->ticks=-1;
   p->flag=0;
+  p->heap_pages=0;
   // Leave room for trap frame.
   sp -= sizeof *p->tf;
   p->tf = (struct trapframe*)sp;

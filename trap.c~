@@ -116,11 +116,27 @@ trap(struct trapframe *tf)
 //	cprintf("\nInside segmentation fault, proc needs to call sighandler :0x%x wrapper:0x%x and eip value: 0x%x\n",proc->sighandle[1],proc->sighandle[0],tf->eip);
 //	cprintf("\nFaulting instruction is: 0x%x",tf->eip); 
 	tf->esp=tf->esp-4;
+	*((int*)tf->esp)=(uint)tf->err;
+	tf->esp=tf->esp-4;
+	*((int*)tf->esp)=(uint)rcr2();
+	tf->esp=tf->esp-4;
 	*((int*)tf->esp)=(uint)proc->sighandle[1];
 	tf->esp=tf->esp-4;
 	*((int*)tf->esp)=(uint)tf->eip;
 	tf->eip=(uint)proc->sighandle[0];
     }
+    else if (tf->trapno==14 && proc->heap_pages)
+	{
+		if((sz = allocuvm(proc->pgdir, (uint)rcr2(), (uint)rcr2()+ 4096)) == 0)
+		{
+			cprintf("pid %d %s: trap %d err %d on cpu %d "            
+				"eip 0x%x addr 0x%x--kill proc\n",
+            			proc->pid, proc->name, tf->trapno, tf->err, cpu->id, tf->eip, 
+            			rcr2());
+    				proc->killed = 1;
+		}
+		proc->heap_pages--;
+      	}
     else{
     // In user space, assume process misbehaved.
     cprintf("pid %d %s: trap %d err %d on cpu %d "

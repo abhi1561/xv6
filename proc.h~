@@ -69,7 +69,6 @@ struct proc {
   sighandler_t sighandle[3];   // Signal handler address  
   int ticks;
   int flag;
-  int heap_pages;
 };
 
 // Process memory is laid out contiguously, low addresses first:

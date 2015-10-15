@@ -105,6 +105,7 @@ extern int sys_findkalloc(void);
 extern int sys_signal(void);
 extern int sys_alarm(void);
 extern int sys_mprot(void);
+extern int sys_dsbrk(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -134,6 +135,7 @@ static int (*syscalls[])(void) = {
 [SYS_signal] sys_signal,
 [SYS_alarm] sys_alarm,
 [SYS_mprot] sys_mprot,
+[SYS_dsbrk] sys_dsbrk,
 };
 
 void

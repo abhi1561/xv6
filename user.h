@@ -30,6 +30,7 @@ int findkalloc(void);
 int signal(int,sighandler_t);
 int alarm(int);
 int mprot(void*,int,int);
+int dsbrk(int);
 
 // ulib.c
 int stat(char*, struct stat*);
